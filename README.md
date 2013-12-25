@@ -22,8 +22,7 @@ To generate the snippet, use:
 (c/render "your-public-key" :ssl? true :display {:theme "clean" :lang "de"})
 ```
 
-Optional parameters:
---------------------
+**Optional parameters:**
 
 * :error         - an error message to display (default nil)
 * :ssl?          - use HTTPS or HTTP? (default false)
@@ -42,10 +41,9 @@ Here's how it can be done:
     (:require [clj-recaptcha.client :as c]))
 
 (c/verify "your-private-key" "challenge" "response" "127.0.0.1")
-;; returns {:valid? false :error "incorrect-captcha-sol"}
+;; {:valid? false :error "incorrect-captcha-sol"}
 ```
-Optional parameters:
---------------------
+**Optional parameters:**
 
 * :ssl?               - use HTTPS or HTTP? (default false)
 * :proxy-host         - a proxy host
