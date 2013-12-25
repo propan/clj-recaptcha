@@ -12,8 +12,7 @@ Include the library in your leiningen project dependencies:
 
 ## Displaying reCAPTCHA
 
-To make the reCAPTCHA widget appear when your page loads, you will need to insert a snippet of JavaScript & non-JavaScript code in your <form> element.
-To generate the snippet, use:
+To make the reCAPTCHA widget appear when your page loads, you will need to insert a snippet of JavaScript & non-JavaScript code in your `<form>` element. To generate the snippet, use:
 
 ```clojure
 (ns your.namespace
