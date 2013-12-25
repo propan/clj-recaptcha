@@ -23,12 +23,14 @@ To generate the snippet, use:
 ```
 
 Optional parameters:
-  :error         - an error message to display (default nil)
-  :ssl?          - use HTTPS or HTTP? (default false)
-  :noscript?     - include <noscript> content (default true)
-  :display       - a map of attributes for reCAPTCHA custom theming (default nil)
-  :iframe-height - the height of noscript iframe (deafult 300)
-  :iframe-width  - the width of noscript iframe (default 500)
+--------------------
+
+* :error         - an error message to display (default nil)
+* :ssl?          - use HTTPS or HTTP? (default false)
+* :noscript?     - include <noscript> content (default true)
+* :display       - a map of attributes for reCAPTCHA custom theming (default nil)
+* :iframe-height - the height of noscript iframe (deafult 300)
+* :iframe-width  - the width of noscript iframe (default 500)
 
 ### Verifying the User's Answer
 
@@ -39,13 +41,16 @@ Here's how it can be done:
 (ns your.namespace
     (:require [clj-recaptcha.client :as c]))
 
-(c/verify "your-private-key" "challenge" "response" "127.0.0.1") ;; returns {:valid? false :error "incorrect-captcha-sol"}
+(c/verify "your-private-key" "challenge" "response" "127.0.0.1")
+;; returns {:valid? false :error "incorrect-captcha-sol"}
 ```
 Optional parameters:
-  :ssl?               - use HTTPS or HTTP? (default false)
-  :proxy-host         - a proxy host
-  :proxy-port         - a proxy port
-  :connection-manager - a connection manager to be used to speed up requests
+--------------------
+
+* :ssl?               - use HTTPS or HTTP? (default false)
+* :proxy-host         - a proxy host
+* :proxy-port         - a proxy port
+* :connection-manager - a connection manager to be used to speed up requests
 
 For better performance, you can use a pooled connection manager, that can be passed via :connection-manager option.
 To create a connection manager:
