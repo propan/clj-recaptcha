@@ -7,7 +7,7 @@ a simple Clojure client for [reCAPTCHA] [1] API.
 Include the library in your leiningen project dependencies:
 
 ```clojure
-[geheimtur "0.0.1"]
+[geheimtur "0.1.1"]
 ```
 
 ## Displaying reCAPTCHA
