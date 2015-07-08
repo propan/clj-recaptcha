@@ -17,29 +17,43 @@
   "Verifies a user's answer for a reCAPTCHA challenge.
 
    private-key - your private key
-   challenge   - the value of recaptcha_challenge_field sent via the form
    response    - the value of recaptcha_response_field sent via the form
-   remote-ip   - the IP address of the user who solved the CAPTCHA
 
    Optional parameters:
+      :version            - version of the recaptcha protocol - 2 (default) or 1
+      :remote-ip          - the IP address of the user who solved the CAPTCHA - required version 1, optional version 2
+      :challenge          - the value of recaptcha_challenge_field sent via the form (needed for version 1 only)
       :ssl?               - use HTTPS or HTTP? (default false)
       :proxy-host         - a proxy host
       :proxy-port         - a proxy port
       :connection-manager - a connection manager to be used to speed up requests"
-  [private-key challenge response remote-ip & {:keys [ssl? proxy-host proxy-port connection-manager]
-                                               :or {ssl? false}}]
-  (if-not (and (empty? challenge)
-               (empty? response))
+  [private-key response  & {:keys [ssl? proxy-host proxy-port connection-manager version challenge remote-ip]
+                                               :or {ssl? false, version 2}}]
+  (if-not (or (and (= version 1) (empty? challenge))
+              (empty? response))
     (try
       (let [endpoint (if ssl? https-api http-api)
-            endpoint (str endpoint "/verify")
-            resp     (client/post endpoint {:form-params        {:privatekey private-key
-                                                                 :remoteip   remote-ip
-                                                                 :challenge  challenge
-                                                                 :response   response}
-                                            :proxy-host         proxy-host
-                                            :proxy-port         proxy-port
-                                            :connection-manager connection-manager})]
+            post-v1 (fn []
+                      (let [endpoint (str endpoint "/verify")]
+                        (client/post endpoint {:form-params        {:privatekey private-key
+                                                                    :remoteip   remote-ip
+                                                                    :challenge  challenge
+                                                                    :response   response}
+                                               :proxy-host         proxy-host
+                                               :proxy-port         proxy-port
+                                               :connection-manager connection-manager})))
+
+            post-v2 (fn []
+                      (let [endpoint (str endpoint "/siteverify")
+                            form-params {:secret   private-key
+                                         :response response}
+                            form-params (if remote-ip (assoc form-params :remoteip remote-ip) form-params)]
+                        (client/post endpoint {:form-params        form-params
+                                               :proxy-host         proxy-host
+                                               :proxy-port         proxy-port
+                                               :connection-manager connection-manager})))
+
+            resp  (if (= version 2) (post-v2) (post-v1))]
         (parse-response (:body resp)))
       (catch Exception ex
         {:valid? false :error "recaptcha-not-reachable"}))
