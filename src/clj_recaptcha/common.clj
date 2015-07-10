@@ -12,24 +12,3 @@
        (create-conn-manager {:timeout 5 :threads 4})"
   [opts]
   (manager/make-reusable-conn-manager opts))
-
-(defn to-json
-  "A JSON serializer for simple Clojure maps."
-  [o]
-  (cond
-   (string? o)
-   (str "'" o "'")
-
-   (keyword? o)
-   (name o)
-
-   (map? o)
-   (let [obj-str (->>
-                   (for [[k v] o]
-                        (str (to-json k) ":" (to-json v)))
-                   (interpose ", ")
-                   (apply str))]
-        (str "{" obj-str "}"))
-
-   :default
-   o))

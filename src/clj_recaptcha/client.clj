@@ -1,5 +1,6 @@
 (ns clj-recaptcha.client
   (:require [clj-http.client :as client]
+            [clojure.data.json :as json]
             [clj-recaptcha.common :as common]))
 
 (defn- parse-response
@@ -60,7 +61,7 @@
   (let [endpoint (if ssl? common/https-api common/http-api)
         error    (if (nil? error) "" (str "&error=" error))]
     (str (when display
-           (str "<script type='text/javascript'>var RecaptchaOptions=" (common/to-json display) ";</script>"))
+           (str "<script type='text/javascript'>var RecaptchaOptions=" (json/write-str display) ";</script>"))
          (str "<script type='text/javascript' src='" endpoint "/challenge?k=" public-key error "'></script>")
          (when (true? noscript?)
            (str "<noscript>"
