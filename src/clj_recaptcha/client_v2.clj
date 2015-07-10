@@ -5,10 +5,13 @@
 
 (defn- parse-response [^String response]
   (if (seq response)
-    (let [parsed-response (json/read-str response :key-fn keyword)
-          valid (:success parsed-response)
-          error (:error-codes parsed-response)]
-      {:valid? valid :error error})
+    (try
+      (let [parsed-response (json/read-str response :key-fn keyword)
+            valid (:success parsed-response)
+            error (:error-codes parsed-response)]
+        {:valid? valid :error error})
+      (catch Exception _
+        {:valid? false :error "recaptcha-not-reachable"}))
     {:valid? false :error "incorrect-captcha-sol"}))
 
 (defn verify

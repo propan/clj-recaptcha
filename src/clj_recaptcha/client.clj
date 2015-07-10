@@ -25,7 +25,7 @@
       :proxy-port         - a proxy port
       :connection-manager - a connection manager to be used to speed up requests"
   [private-key challenge response remote-ip & {:keys [ssl? proxy-host proxy-port connection-manager]
-                                               :or {ssl? false}}]
+                                               :or   {ssl? false}}]
   (if (and (seq challenge)
            (seq response))
     (try

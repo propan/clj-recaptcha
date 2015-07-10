@@ -8,6 +8,10 @@
       (let [res (parse-response "{\"success\" : true}")]
         (is (= {:valid? true, :error nil} res))))
 
+    (testing "Survives non-JSON response"
+      (let [res (parse-response "<html><body>404 Page not found</body></html>")]
+        (is (= {:valid? false :error "recaptcha-not-reachable"} res))))
+
     (testing "Recognises invalid response"
       (let [res (parse-response "{\"success\" : false ,\"error-codes\": [ \"invalid-input-secret\"]}")]
         (is (= {:valid? false, :error ["invalid-input-secret"]} res))))))
