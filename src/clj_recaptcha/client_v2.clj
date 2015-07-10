@@ -18,10 +18,10 @@
       "Verifies a user's answer for a reCAPTCHA challenge.
 
        secret   - your secret provided by Google when you register
-       response - the value of recaptcha_response_field sent via the form
+       response - the value of g-recaptcha-response sent via the form
 
        Optional parameters:
-          :remote-ip          - the IP address of the user who solved the CAPTCHA -optional version 2
+          :remote-ip          - the IP address of the user who solved the CAPTCHA
           :proxy-host         - a proxy host
           :proxy-port         - a proxy port
           :connection-manager - a connection manager to be used to speed up requests"
