@@ -1,9 +1,6 @@
 (ns clj-recaptcha.client
   (:require [clj-http.client :as client]
-            [clj-http.conn-mgr :as manager]))
-
-(def http-api  "http://www.google.com/recaptcha/api")
-(def https-api "https://www.google.com/recaptcha/api")
+            [clj-recaptcha.common :as common]))
 
 (defn- parse-response
   [^String response]
@@ -28,10 +25,10 @@
       :connection-manager - a connection manager to be used to speed up requests"
   [private-key challenge response remote-ip & {:keys [ssl? proxy-host proxy-port connection-manager]
                                                :or {ssl? false}}]
-  (if-not (and (empty? challenge)
-               (empty? response))
+  (if (and (seq challenge)
+           (seq response))
     (try
-      (let [endpoint (if ssl? https-api http-api)
+      (let [endpoint (if ssl? common/https-api common/http-api)
             endpoint (str endpoint "/verify")
             resp     (client/post endpoint {:form-params        {:privatekey private-key
                                                                  :remoteip   remote-ip
@@ -41,40 +38,9 @@
                                             :proxy-port         proxy-port
                                             :connection-manager connection-manager})]
         (parse-response (:body resp)))
-      (catch Exception ex
+      (catch Exception _ex
         {:valid? false :error "recaptcha-not-reachable"}))
     {:valid? false :error "incorrect-captcha-sol"}))
-
-(defn create-conn-manager
-  "Creates a reusable connection manager.
-
-   It's just a shortcut for clj-http.conn-mgr/make-reusable-conn-manager.
-   
-   Example:
-       (create-conn-manager {:timeout 5 :threads 4})"
-  [opts]
-  (manager/make-reusable-conn-manager opts))
-
-(defn- to-json
-  "A JSON serializer for simple Clojure maps."
-  [o]
-  (cond
-   (string? o)
-   (str "'" o "'")
-
-   (keyword? o)
-   (name o)
-   
-   (map? o)
-   (let [obj-str (->>
-                  (for [[k v] o]
-                    (str (to-json k) ":" (to-json v)))
-                  (interpose ", ")
-                  (apply str))]
-     (str "{" obj-str "}"))
-
-   :default
-   o))
 
 
 (defn render
@@ -91,12 +57,12 @@
       :iframe-width  - the width of noscript iframe (default 500)"
   [public-key & {:keys [error ssl? noscript? display iframe-height iframe-width]
                  :or {ssl? false noscript? true iframe-height 300 iframe-width 500}}]
-  (let [endpoint (if ssl? https-api http-api)
+  (let [endpoint (if ssl? common/https-api common/http-api)
         error    (if (nil? error) "" (str "&error=" error))]
     (str (when display
-           (str "<script type='text/javascript'>var RecaptchaOptions=" (to-json display) ";</script>"))
+           (str "<script type='text/javascript'>var RecaptchaOptions=" (common/to-json display) ";</script>"))
          (str "<script type='text/javascript' src='" endpoint "/challenge?k=" public-key error "'></script>")
-         (when (true? noscript?) 
+         (when (true? noscript?)
            (str "<noscript>"
                 (str "<iframe src='" endpoint "/noscript?k=" public-key error "' height='" iframe-height "' width='" iframe-width "' frameborder='0'></iframe><br/>")
                 "<textarea name='recaptcha_challenge_field' rows='3' cols='40'></textarea>"
