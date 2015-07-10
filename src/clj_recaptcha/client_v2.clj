@@ -38,3 +38,10 @@
             {:valid? false :error "recaptcha-not-reachable"}))
         {:valid? false :error "incorrect-captcha-sol"}))
 
+(defn render
+  "Renders the HTML snippet to prompt reCAPTCHA.
+
+   public-key - your public key"
+  [public-key]
+  (str "<script src='https://www.google.com/recaptcha/api.js' async defer></script>"
+       "<div class='g-recaptcha' data-sitekey=" public-key "></div>"))
