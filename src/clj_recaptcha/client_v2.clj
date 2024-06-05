@@ -9,7 +9,8 @@
       (let [parsed-response (json/read-str response :key-fn keyword)
             valid (:success parsed-response)
             error (:error-codes parsed-response)]
-        {:valid? valid :error error})
+        (merge {:valid? valid :error error}
+               (select-keys parsed-response [:score :action :hostname])))
       (catch Exception _
         {:valid? false :error "recaptcha-not-reachable"}))
     {:valid? false :error "incorrect-captcha-sol"}))

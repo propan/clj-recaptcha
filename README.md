@@ -62,14 +62,23 @@ Here's how it can be done:
 * :proxy-port         - a proxy port
 * :connection-manager - a connection manager to be used to speed up requests
 
-### reCAPTCHA v2.0
+### reCAPTCHA v2.0 and v3.0
 
 ```clojure
 (ns your.namespace
     (:require [clj-recaptcha.client-v2 :as c]))
 
 (c/verify "your-private-key" "response" :remote-ip "127.0.0.1")
-;; {:valid? false :error "incorrect-captcha-sol"}
+;; {:valid? false 
+;;  :error "incorrect-captcha-sol"}
+
+(c/verify "your-private-key" "another-response" :remote-ip "127.0.0.1")
+;; {:valid? true 
+;;  :error "incorrect-captcha-sol"
+;;  :score 0.8                      ;; present in v3
+;;  :action "buy"                   ;; present in v3
+;;  :hostname "my-hostname"         ;; present in v3
+;; }
 ```
 **Optional parameters:**
 
