@@ -1,4 +1,4 @@
-(defproject clj-recaptcha "0.0.3"
+(defproject clj-recaptcha "0.0.4-SNAPSHOT"
   :description "a Clojure client for reCAPTCHA API"
   :url "http://github.com/propan/clj-recaptcha"
   :license {:name "Eclipse Public License"
