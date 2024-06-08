@@ -1,13 +1,13 @@
 # clj-recaptcha [![Build Status](https://travis-ci.org/propan/clj-recaptcha.svg?branch=master)](https://travis-ci.org/propan/clj-recaptcha)
 
-a simple Clojure client for [reCAPTCHA] [1] API (v1.0 and v2.0).
+a simple Clojure client for [reCAPTCHA](https://developers.google.com/recaptcha/intro) API (v1.0 and v2.0).
 
 ## Usage
 
 Include the library in your leiningen project dependencies:
 
 ```clojure
-[clj-recaptcha "0.0.2"]
+[clj-recaptcha "0.0.3"]
 ```
 
 ## Displaying reCAPTCHA
@@ -69,11 +69,11 @@ Here's how it can be done:
     (:require [clj-recaptcha.client-v2 :as c]))
 
 (c/verify "your-private-key" "response" :remote-ip "127.0.0.1")
-;; {:valid? false 
+;; {:valid? false
 ;;  :error "incorrect-captcha-sol"}
 
 (c/verify "your-private-key" "another-response" :remote-ip "127.0.0.1")
-;; {:valid? true 
+;; {:valid? true
 ;;  :error "incorrect-captcha-sol"
 ;;  :score 0.8                      ;; present in v3
 ;;  :action "buy"                   ;; present in v3
@@ -93,7 +93,7 @@ To create a connection manager:
 ```clojure
 (create-conn-manager {:threads 5})
 ```
-It's just a shortcut for `clj-http.conn-mgr/make-reusable-conn-manager`, check [clj-http] [2] documentation for more details.
+It's just a shortcut for `clj-http.conn-mgr/make-reusable-conn-manager`, check [clj-http](https://github.com/dakrone/clj-http) documentation for more details.
 
 
 ## License
@@ -102,6 +102,3 @@ Copyright © 2013 Pavel Prokopenko
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
-
-[1]: https://developers.google.com/recaptcha/intro
-[2]: https://github.com/dakrone/clj-http
